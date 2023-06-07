@@ -1,7 +1,6 @@
 package nl.han.ica.icss.gui;
 
 import com.google.common.io.Resources;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -223,9 +222,12 @@ public class MainGui extends Application {
        clear();
        feedbackPane.addLine("Applying transformations...");
        pipeline.transform();
-       if (pipeline.isTransformed()) {
-           feedbackPane.addLine("Transformation succeeded");
-       }
+        if (pipeline.isTransformed()) {
+            for (String e : pipeline.getErrors()) {
+                feedbackPane.addLine(e);
+            }
+            feedbackPane.addLine("Transformation succeeded");
+        }
        astPane.update(pipeline.getAST());
        updateToolbar();
     }
@@ -248,7 +250,9 @@ public class MainGui extends Application {
             checkButton.setDisable(false);
             if (pipeline.isChecked()) {
                 transformButton.setDisable(false);
-                generateButton.setDisable(false);
+                if (pipeline.isTransformed()) {
+                    generateButton.setDisable(false);
+                }
             }
         }
     }

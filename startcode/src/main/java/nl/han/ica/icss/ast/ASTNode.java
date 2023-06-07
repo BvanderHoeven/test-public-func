@@ -1,13 +1,14 @@
 package nl.han.ica.icss.ast;
 
-import nl.han.ica.icss.checker.SemanticError;
+import nl.han.ica.icss.checker.ErrorType;
+import nl.han.ica.icss.checker.ICSSError;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ASTNode {
 
-    private SemanticError error = null;
+    private ICSSError error = null;
 
     /*
      This method is used in the GUI to create an appropriate label
@@ -38,12 +39,16 @@ public class ASTNode {
         return this;
     }
 
-    public SemanticError getError() {
+    public ICSSError getError() {
         return this.error;
     }
 
     public void setError(String description) {
-        this.error = new SemanticError(description);
+        this.error = new ICSSError(description);
+    }
+
+    public void setError(String description, ErrorType errorType) {
+        this.error = new ICSSError(description).setErrorType(errorType);
     }
 
     public boolean hasError() {

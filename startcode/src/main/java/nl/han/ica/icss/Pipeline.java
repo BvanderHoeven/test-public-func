@@ -2,7 +2,7 @@ package nl.han.ica.icss;
 
 import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.checker.Checker;
-import nl.han.ica.icss.checker.SemanticError;
+import nl.han.ica.icss.checker.ICSSError;
 import nl.han.ica.icss.generator.Generator;
 import nl.han.ica.icss.parser.ASTListener;
 import nl.han.ica.icss.parser.ICSSLexer;
@@ -89,9 +89,9 @@ public class Pipeline implements ANTLRErrorListener {
 
            (new Checker()).check(this.ast);
 
-            ArrayList<SemanticError> errors = this.ast.getErrors();
+            ArrayList<ICSSError> errors = this.ast.getErrors();
             if (!errors.isEmpty()) {
-                for (SemanticError e : errors) {
+                for (ICSSError e : errors) {
                     this.errors.add(e.toString());
                 }
             }
@@ -106,13 +106,19 @@ public class Pipeline implements ANTLRErrorListener {
     }
 
     public void transform() {
-        if(ast == null)
+        if (ast == null)
             return;
 
         (new Evaluator()).apply(ast);
 
+        ArrayList<ICSSError> errors = this.ast.getErrors();
+        if (!errors.isEmpty()) {
+            for (ICSSError e : errors) {
+                this.errors.add(e.toString());
+            }
+        }
 
-        transformed = errors.isEmpty();
+        transformed = true;
     }
     public String generate() {
         Generator generator = new Generator();
