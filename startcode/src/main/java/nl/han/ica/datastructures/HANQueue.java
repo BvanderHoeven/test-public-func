@@ -1,0 +1,46 @@
+package nl.han.ica.datastructures;
+
+import nl.han.ica.datastructures.interfaces.IHANLinkedList;
+import nl.han.ica.datastructures.interfaces.IHANQueue;
+
+public class HANQueue<T> implements IHANQueue<T> {
+
+    IHANLinkedList<T> list;
+
+    public HANQueue() {
+        list = new HANLinkedList<>();
+    }
+
+    @Override
+    public void clear() {
+        list.clear();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return list.getSize() == 0;
+    }
+
+    @Override
+    public void enqueue(T value) {
+        list.addFirst(value);
+    }
+
+    @Override
+    public T dequeue() {
+        T tmp = list.getFirst();
+        list.removeFirst();
+
+        return tmp;
+    }
+
+    @Override
+    public T peek() {
+        return list.getFirst();
+    }
+
+    @Override
+    public int getSize() {
+        return list.getSize();
+    }
+}

@@ -6,14 +6,14 @@ import nl.han.ica.datastructures.interfaces.IHANLinkedList;
 
 public class HANLinkedList<T> implements IHANLinkedList<T>{
 
-    private LinkedListNode<T> first = null;
+    private HANLinkedListNode<T> first = null;
 
     @Override
     public void addFirst(T value) {
         if (first == null) {
-            first = new LinkedListNode<>(value);
+            first = new HANLinkedListNode<>(value);
         } else {
-            LinkedListNode<T> toAdd = new LinkedListNode<>(value);
+            HANLinkedListNode<T> toAdd = new HANLinkedListNode<>(value);
             toAdd.setNext(first);
             first = toAdd;
         }
@@ -26,8 +26,8 @@ public class HANLinkedList<T> implements IHANLinkedList<T>{
 
     @Override
     public void insert(int index, T value) {
-        LinkedListNode<T> tmp = new LinkedListNode<>(value);
-        LinkedListNode<T> current = first;
+        HANLinkedListNode<T> tmp = new HANLinkedListNode<>(value);
+        HANLinkedListNode<T> current = first;
 
         if (first == null) {
             first = tmp;
@@ -67,7 +67,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T>{
             return;
         }
 
-        LinkedListNode<T> current = first;
+        HANLinkedListNode<T> current = first;
 
         int count = 0;
 
@@ -76,7 +76,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T>{
             count++;
         }
 
-        LinkedListNode<T> toRemove = current.getNext();
+        HANLinkedListNode<T> toRemove = current.getNext();
         current.setNext(toRemove.getNext());
     }
 
