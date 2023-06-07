@@ -1,6 +1,6 @@
 package nl.han.ica.icss.ast;
 
-import nl.han.ica.icss.checker.SemanticError;
+import nl.han.ica.icss.checker.ICSSError;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -18,12 +18,12 @@ public class AST {
 	public void setRoot(Stylesheet stylesheet) {
 		root = stylesheet;
 	}
-    public ArrayList<SemanticError> getErrors() {
-	    ArrayList<SemanticError> errors = new ArrayList<>();
+    public ArrayList<ICSSError> getErrors() {
+	    ArrayList<ICSSError> errors = new ArrayList<>();
         collectErrors(errors,root);
         return errors;
     }
-    private void collectErrors(ArrayList<SemanticError> errors, ASTNode node) {
+    private void collectErrors(ArrayList<ICSSError> errors, ASTNode node) {
 	    if(node.hasError()) {
 	        errors.add(node.getError());
         }
