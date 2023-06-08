@@ -83,8 +83,8 @@ public class Evaluator implements Transform {
             return;
         }
 
-        if (astNode instanceof IfClause) {
-            IfClause ifClause = (IfClause) astNode;
+        if (astNode instanceof BooleanClause) {
+            BooleanClause ifClause = (BooleanClause) astNode;
             ifClause.conditionalExpression = this.transformExpression(ifClause.conditionalExpression);
 
             if (((BoolLiteral) ifClause.conditionalExpression).value) {
@@ -101,11 +101,11 @@ public class Evaluator implements Transform {
                 }
             }
 
-            this.transformIfClause((IfClause) astNode, parentBody);
+            this.transformIfClause((BooleanClause) astNode, parentBody);
         }
     }
 
-    private void transformIfClause(IfClause ifClause, ArrayList<ASTNode> parentBody) {
+    private void transformIfClause(BooleanClause ifClause, ArrayList<ASTNode> parentBody) {
         for (ASTNode child : ifClause.getChildren()) {
             this.transformRuleBody(child, parentBody);
         }

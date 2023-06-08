@@ -6,7 +6,7 @@ import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Declaration;
 import nl.han.ica.icss.ast.ElseClause;
-import nl.han.ica.icss.ast.IfClause;
+import nl.han.ica.icss.ast.BooleanClause;
 import nl.han.ica.icss.ast.Stylerule;
 import nl.han.ica.icss.ast.Stylesheet;
 import nl.han.ica.icss.ast.VariableAssignment;
@@ -73,7 +73,7 @@ public class Checker {
                 continue;
             }
 
-            if (astNode instanceof IfClause) {
+            if (astNode instanceof BooleanClause) {
                 this.resolveIfClause(astNode);
                 continue;
             }
@@ -117,7 +117,7 @@ public class Checker {
     }
 
     private void resolveIfClause(ASTNode astNode) {
-        IfClause ifClause = (IfClause) astNode;
+        BooleanClause ifClause = (BooleanClause) astNode;
         variableTypes.addFirst(new HashMap<>());
         this.booleanResolver.resolveBoolean(ifClause);
         this.resolveRuleBody(ifClause.body);

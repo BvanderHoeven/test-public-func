@@ -3,21 +3,21 @@ package nl.han.ica.icss.ast;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class IfClause extends ASTNode {
+public class BooleanClause extends ASTNode {
 
 
     public Expression conditionalExpression;
     public ArrayList<ASTNode> body = new ArrayList<>();
     public ElseClause elseClause;
 
-    public IfClause() { }
+    public BooleanClause() { }
 
-    public IfClause(Expression conditionalExpression, ArrayList<ASTNode> body) {
+    public BooleanClause(Expression conditionalExpression, ArrayList<ASTNode> body) {
 
         this.conditionalExpression = conditionalExpression;
         this.body = body;
     }
-    public IfClause(Expression conditionalExpression, ArrayList<ASTNode> body, ElseClause elseClause) {
+    public BooleanClause(Expression conditionalExpression, ArrayList<ASTNode> body, ElseClause elseClause) {
 
         this.conditionalExpression = conditionalExpression;
         this.body = body;
@@ -26,7 +26,7 @@ public class IfClause extends ASTNode {
 
     @Override
     public String getNodeLabel() {
-        return "If_Clause";
+        return "Boolean_Clause";
     }
     @Override
     public ArrayList<ASTNode> getChildren() {
@@ -55,7 +55,7 @@ public class IfClause extends ASTNode {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        IfClause ifClause = (IfClause) o;
+        BooleanClause ifClause = (BooleanClause) o;
         if (this.elseClause == null)
             return Objects.equals(conditionalExpression, ifClause.getConditionalExpression()) &&
                 Objects.equals(body, ifClause.body);

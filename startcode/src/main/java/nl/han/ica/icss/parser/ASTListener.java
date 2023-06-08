@@ -183,15 +183,15 @@ public class ASTListener extends ICSSBaseListener {
     }
 
     @Override
-    public void enterIfClause(ICSSParser.IfClauseContext ctx) {
-        ASTNode ifClause = new IfClause();
-        currentContainer.push(ifClause);
+    public void enterBooleanClause(ICSSParser.BooleanClauseContext ctx) {
+        ASTNode booleanClause = new BooleanClause();
+        currentContainer.push(booleanClause);
     }
 
     @Override
-    public void exitIfClause(ICSSParser.IfClauseContext ctx) {
-        ASTNode ifClause = currentContainer.pop();
-        currentContainer.peek().addChild(ifClause);
+    public void exitBooleanClause(ICSSParser.BooleanClauseContext ctx) {
+        ASTNode booleanClause = currentContainer.pop();
+        currentContainer.peek().addChild(booleanClause);
     }
 
     @Override

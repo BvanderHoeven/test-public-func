@@ -1,8 +1,19 @@
 grammar ICSS;
 
-//--- LEXER: ---
+stylesheet: variableAssignment* styleRule* EOF;
 
-// IF support:
+selector: (tagSelector | classSelector | idSelector) (COMMA selector)*;
+classSelector: CLASS_IDENT;
+tagSelector: LOWER_IDENT;
+idSelector: ID_IDENT | COLOR;
+
+styleRule: selector OPEN_BRACE ruleBody CLOSE_BRACE;
+propertyName: LOWER_IDENT;
+
+ruleBody: (declaration | booleanClause | variableAssignment)*;
+declaration: propertyName COLON expression SEMICOLON;
+booleanClause: IF BOX_BRACKET_OPEN (variableReference | boolLiteral) BOX_BRACKET_CLOSE OPEN_BRACE ruleBody CLOSE_BRACE elseClause?;
+
 IF: 'if';
 ELSE: 'else';
 BOX_BRACKET_OPEN: '[';
@@ -31,9 +42,6 @@ CAPITAL_IDENT: [A-Z] [A-Za-z0-9_]*;
 //All whitespace is skipped
 WS: [ \t\r\n]+ -> skip;
 
-COMMENT : '/*' (COMMENT|.)*? '*/' -> skip;
-LINE_COMMENT  : '//' .*? '\n' -> skip;
-
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 SEMICOLON: ';';
@@ -44,16 +52,8 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
+variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 
-//--- PARSER: ---
-stylesheet: variableAssignment* styleRule* EOF;
-styleRule: selector OPEN_BRACE ruleBody CLOSE_BRACE;
-declaration: propertyName COLON expression SEMICOLON;
-propertyName: LOWER_IDENT;
-
-variableAssignment: variableReference ASSIGNMENT_OPERATOR expression+ SEMICOLON;
-
-ifClause: IF BOX_BRACKET_OPEN (variableReference | boolLiteral) BOX_BRACKET_CLOSE OPEN_BRACE ruleBody CLOSE_BRACE elseClause?;
 elseClause: ELSE OPEN_BRACE ruleBody CLOSE_BRACE;
 
 expression: literal | expression (MUL | DIV) expression | expression (PLUS | MIN) expression;
@@ -65,10 +65,3 @@ pixelLiteral: PIXELSIZE;
 scalarLiteral: SCALAR;
 variableReference: CAPITAL_IDENT;
 literal: boolLiteral | colorLiteral | percentageLiteral | pixelLiteral | scalarLiteral | variableReference;
-
-classSelector: CLASS_IDENT;
-tagSelector: LOWER_IDENT;
-idSelector: ID_IDENT | COLOR;
-selector: (tagSelector | classSelector | idSelector) (COMMA selector)*;
-
-ruleBody: (declaration | ifClause | variableAssignment)*;
