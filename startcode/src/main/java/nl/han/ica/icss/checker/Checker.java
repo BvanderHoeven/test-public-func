@@ -36,23 +36,23 @@ public class Checker {
     }
 
     public void check(AST ast) {
-        this.checkStylesheet(ast.root);
+        this.checkRootNode(ast.root);
     }
 
-    private void checkStylesheet(ASTNode astNode) {
+    private void checkRootNode(ASTNode astNode) {
         Stylesheet stylesheet = (Stylesheet) astNode;
 
         variableTypes.addFirst(new HashMap<>());
 
         for (ASTNode child : stylesheet.getChildren()) {
             if (child instanceof VariableAssignment) {
-                this.variableResolver.checkASTNode(child);
+                this.variableResolver.resolveASTNode(child);
                 continue;
             }
 
             if (child instanceof Stylerule) {
                 variableTypes.addFirst(new HashMap<>());
-                this.checkStylerule(child);
+                this.resolveStylerule(child);
                 variableTypes.removeFirst();
             }
 
@@ -61,78 +61,77 @@ public class Checker {
         variableTypes.removeFirst();
     }
 
-    private void checkStylerule(ASTNode astNode) {
+    private void resolveStylerule(ASTNode astNode) {
         Stylerule stylerule = (Stylerule) astNode;
-        this.checkRuleBody(stylerule.body);
+        this.resolveRuleBody(stylerule.body);
     }
 
-    private void checkRuleBody(ArrayList<ASTNode> astNodes) {
+    private void resolveRuleBody(ArrayList<ASTNode> astNodes) {
         for (ASTNode astNode : astNodes) {
             if (astNode instanceof Declaration) {
-                this.checkDeclaration(astNode);
+                this.resolveDeclaration(astNode);
                 continue;
             }
 
             if (astNode instanceof IfClause) {
-                this.checkIfClause(astNode);
+                this.resolveIfClause(astNode);
                 continue;
             }
 
             if (astNode instanceof VariableAssignment) {
-                this.variableResolver.checkASTNode(astNode);
+                this.variableResolver.resolveASTNode(astNode);
             }
         }
-    }
+    }    
 
-    private void checkIfClause(ASTNode astNode) {
-        IfClause ifClause = (IfClause) astNode;
-        variableTypes.addFirst(new HashMap<>());
-        this.booleanResolver.resolveBoolean(ifClause);
-        this.checkRuleBody(ifClause.body);
-        this.variableTypes.removeFirst();
-
-        if (ifClause.elseClause != null) {
-            this.variableTypes.addFirst(new HashMap<>());
-            this.checkElseClause(ifClause.elseClause);
-            this.variableTypes.removeFirst();
-        }
-    }
-
-    private void checkElseClause(ASTNode astNode) {
-        ElseClause elseClause = (ElseClause) astNode;
-        this.checkRuleBody(elseClause.body);
-    }
-
-    private void checkDeclaration(ASTNode astNode) {
+    private void resolveDeclaration(ASTNode astNode) {
         Declaration declaration = (Declaration) astNode;
         ExpressionType expressionType = this.expressionResolver.getExpressionTypeForASTNode(declaration.expression);
 
-        switch (declaration.property.name) {
+        String declarationName = declaration.property.name;
+        switch (declarationName) {
             case "color":
                 if (expressionType != ExpressionType.COLOR) {
-                    astNode.setError("Color value can only be a color literal.");
+                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.", declarationName, expressionType));
                 }
                 break;
             case "background-color":
                 if (expressionType != ExpressionType.COLOR) {
-                    astNode.setError("Background-color value can only be a color literal.");
+                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.", declarationName, expressionType));
                 }
                 break;
             case "width":
                 if (expressionType != ExpressionType.PIXEL && expressionType != ExpressionType.PERCENTAGE) {
-                    astNode.setError("Width value can only be a pixel or percentage literal.");
+                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.", declarationName, expressionType));
                 }
                 break;
             case "height":
                 if (expressionType != ExpressionType.PIXEL && expressionType != ExpressionType.PERCENTAGE) {
-                    astNode.setError("Height value can only be a pixel or percentage literal.");
+                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration: '%s', expressionType:'%s'.", declarationName, expressionType));
                 }
                 break;
             default:
-                astNode.setError("The only properties allowed are height, width, background-color and color.");
+                astNode.setError(String.format("Declaration name: '%s' not found", declarationName));
                 break;
         }
     }
 
-    
+    private void resolveIfClause(ASTNode astNode) {
+        IfClause ifClause = (IfClause) astNode;
+        variableTypes.addFirst(new HashMap<>());
+        this.booleanResolver.resolveBoolean(ifClause);
+        this.resolveRuleBody(ifClause.body);
+        this.variableTypes.removeFirst();
+
+        if (ifClause.elseClause != null) {
+            this.variableTypes.addFirst(new HashMap<>());
+            this.resolveElse(ifClause.elseClause);
+            this.variableTypes.removeFirst();
+        }
+    }
+
+    private void resolveElse(ASTNode astNode) {
+        ElseClause elseClause = (ElseClause) astNode;
+        this.resolveRuleBody(elseClause.body);
+    }    
 }

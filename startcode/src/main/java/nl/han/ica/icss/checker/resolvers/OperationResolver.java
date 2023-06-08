@@ -1,9 +1,8 @@
-package nl.han.ica.icss.checker;
+package nl.han.ica.icss.checker.resolvers;
 
 import nl.han.ica.icss.ast.Expression;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.operations.AddOperation;
-import nl.han.ica.icss.ast.operations.DivideOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
@@ -23,18 +22,6 @@ public class OperationResolver {
         if (left == ExpressionType.COLOR || right == ExpressionType.COLOR || left == ExpressionType.BOOL || right == ExpressionType.BOOL) {
             operation.setError("Colors and booleans are not allowed in operations.");
             return ExpressionType.UNDEFINED;
-        }
-
-        if (operation instanceof DivideOperation) {
-            if (left == ExpressionType.SCALAR) {
-                operation.setError("Division of a scalar literal is not allowed.");
-                return ExpressionType.UNDEFINED;
-            }
-
-            if (right != ExpressionType.SCALAR) {
-                operation.setError("The right side of a division should be a literal value.");
-                return ExpressionType.UNDEFINED;
-            }
         }
 
         if (operation instanceof MultiplyOperation) {

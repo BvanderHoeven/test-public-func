@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 import nl.han.ica.datastructures.interfaces.IHANLinkedList;
 
-public class HANLinkedList<T> implements IHANLinkedList<T>, Iterable<T> {
+public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     private HANLinkedListNode<T> first = null;
 

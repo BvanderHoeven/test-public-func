@@ -18,7 +18,7 @@ public class VariableResolver {
         this.expressionResolver = new ExpressionResolver(this);
     }
 
-    public void checkASTNode(ASTNode astNode) {
+    public void resolveASTNode(ASTNode astNode) {
         VariableAssignment variableAssignment = (VariableAssignment) astNode;
         VariableReference variableReference = variableAssignment.name;
         ExpressionType expressionType = expressionResolver.getExpressionTypeForASTNode(variableAssignment.expression);
