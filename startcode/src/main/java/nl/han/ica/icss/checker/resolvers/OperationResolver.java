@@ -1,5 +1,6 @@
 package nl.han.ica.icss.checker;
 
+import nl.han.ica.icss.ast.Expression;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.DivideOperation;
@@ -7,30 +8,17 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
-public class CheckOperation {
+public class OperationResolver {
 
-    private final CheckExpression checkExpression;
+    private final ExpressionResolver expressionResolver;
 
-    public CheckOperation(CheckExpression checkExpression) {
-        this.checkExpression = checkExpression;
+    public OperationResolver(ExpressionResolver checkExpression) {
+        this.expressionResolver = checkExpression;
     }
 
-    public ExpressionType check(Operation operation) {
-
-        ExpressionType left;
-        ExpressionType right;
-
-        if (operation.lhs instanceof Operation) {
-            left = this.check((Operation) operation.lhs);
-        } else {
-            left = this.checkExpression.checkExpressionType(operation.lhs);
-        }
-
-        if (operation.rhs instanceof Operation) {
-            right = this.check((Operation) operation.rhs);
-        } else {
-            right = this.checkExpression.checkExpressionType(operation.rhs);
-        }
+    public ExpressionType getExpressionTypeForOperation(Operation operation) {
+        ExpressionType left = getExpressionType(operation.lhs);
+        ExpressionType right = getExpressionType(operation.rhs);
 
         if (left == ExpressionType.COLOR || right == ExpressionType.COLOR || left == ExpressionType.BOOL || right == ExpressionType.BOOL) {
             operation.setError("Colors and booleans are not allowed in operations.");
@@ -61,5 +49,13 @@ public class CheckOperation {
         }
 
         return left;
+    }
+
+    private ExpressionType getExpressionType(Expression expression) {
+        if (expression instanceof Operation) {
+            return getExpressionTypeForOperation((Operation) expression);
+        } else {
+            return expressionResolver.getExpressionTypeForExpression(expression);
+        }
     }
 }
