@@ -18,8 +18,6 @@ import nl.han.ica.icss.checker.resolvers.VariableResolver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
 public class Checker {
 
     private IHANLinkedList<HashMap<String, ExpressionType>> variableTypes;
@@ -53,7 +51,7 @@ public class Checker {
             if (child instanceof Stylerule) {
                 variableTypes.addFirst(new HashMap<>());
                 Stylerule stylerule = (Stylerule) astNode;
-        this.resolveRuleBody(stylerule.body);
+                this.resolveRuleBody(stylerule.body);
                 variableTypes.removeFirst();
             }
 
@@ -75,7 +73,7 @@ public class Checker {
                 this.booleanResolver.resolveBoolean(ifClause);
                 this.resolveRuleBody(ifClause.body);
                 this.variableTypes.removeFirst();
-        
+
                 if (ifClause.elseClause != null) {
                     this.variableTypes.addFirst(new HashMap<>());
                     ElseClause elseClause = (ElseClause) astNode;
@@ -89,7 +87,7 @@ public class Checker {
                 this.variableResolver.resolveASTNode(astNode);
             }
         }
-    }    
+    }
 
     private void resolveDeclaration(ASTNode astNode) {
         Declaration declaration = (Declaration) astNode;
@@ -103,22 +101,30 @@ public class Checker {
         switch (declarationName) {
             case "color":
                 if (expressionType != ExpressionType.COLOR) {
-                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.", declarationName, expressionType));
+                    astNode.setError(String.format(
+                            "Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.",
+                            declarationName, expressionType));
                 }
                 break;
             case "background-color":
                 if (expressionType != ExpressionType.COLOR) {
-                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.", declarationName, expressionType));
+                    astNode.setError(String.format(
+                            "Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.",
+                            declarationName, expressionType));
                 }
                 break;
             case "width":
                 if (expressionType != ExpressionType.PIXEL && expressionType != ExpressionType.PERCENTAGE) {
-                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.", declarationName, expressionType));
+                    astNode.setError(String.format(
+                            "Declaration & Expressiontype mismatch, Declaration:'%s', expressionType:'%s'.",
+                            declarationName, expressionType));
                 }
                 break;
             case "height":
                 if (expressionType != ExpressionType.PIXEL && expressionType != ExpressionType.PERCENTAGE) {
-                    astNode.setError(String.format("Declaration & Expressiontype mismatch, Declaration: '%s', expressionType:'%s'.", declarationName, expressionType));
+                    astNode.setError(String.format(
+                            "Declaration & Expressiontype mismatch, Declaration: '%s', expressionType:'%s'.",
+                            declarationName, expressionType));
                 }
                 break;
             default:
