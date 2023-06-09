@@ -27,33 +27,33 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     @Override
     public void insert(int index, T value) {
-        HANLinkedListNode<T> tmp = new HANLinkedListNode<>(value);
-        HANLinkedListNode<T> current = first;
+        HANLinkedListNode<T> newNode = new HANLinkedListNode<>(value);
+        HANLinkedListNode<T> firstNodeCopy = first;
 
         if (first == null) {
-            first = tmp;
+            first = newNode;
             return;
         }
 
-        if (index == 0) {
-            tmp.setNext(current);
-            first = tmp;
+        else if (index == 0) {
+            newNode.setNext(firstNodeCopy);
+            first = newNode;
             return;
         }
 
-        if (index > getSize()) {
+        else if (index > getSize()) {
             return;
         }
 
-        int count = 0;
+        int traverser = 0;
 
-        while (count != index - 1) {
-            current = current.getNext();
-            count++;
+        while (traverser != index - 1) {
+            firstNodeCopy = firstNodeCopy.getNext();
+            traverser++;
         }
 
-        tmp.setNext(current.getNext());
-        current.setNext(tmp);
+        newNode.setNext(firstNodeCopy.getNext());
+        firstNodeCopy.setNext(newNode);
     }
 
     @Override
@@ -68,17 +68,17 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
             return;
         }
 
-        HANLinkedListNode<T> current = first;
+        HANLinkedListNode<T> firstNodeCopy = first;
 
-        int count = 0;
+        int traverser = 0;
 
-        while (count != pos - 1) {
-            current = current.getNext();
-            count++;
+        while (traverser != pos - 1) {
+            firstNodeCopy = firstNodeCopy.getNext();
+            traverser++;
         }
 
-        HANLinkedListNode<T> toRemove = current.getNext();
-        current.setNext(toRemove.getNext());
+        HANLinkedListNode<T> toRemove = firstNodeCopy.getNext();
+        firstNodeCopy.setNext(toRemove.getNext());
     }
 
     @Override
@@ -121,15 +121,15 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
     }
 
     private static class LinkedListIterator<T> implements Iterator<T> {
-        private HANLinkedListNode<T> current;
+        private HANLinkedListNode<T> currentNode;
 
         public LinkedListIterator(HANLinkedListNode<T> first) {
-            this.current = first;
+            this.currentNode = first;
         }
 
         @Override
         public boolean hasNext() {
-            return current != null;
+            return currentNode != null;
         }
 
         @Override
@@ -137,8 +137,8 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            T value = current.getValue();
-            current = current.getNext();
+            T value = currentNode.getValue();
+            currentNode = currentNode.getNext();
             return value;
         }
     }
