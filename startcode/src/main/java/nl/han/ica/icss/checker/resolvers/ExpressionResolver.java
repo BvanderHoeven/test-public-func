@@ -34,12 +34,12 @@ public class ExpressionResolver {
         } else {
             if (expression instanceof PercentageLiteral) {
                 return ExpressionType.PERCENTAGE;
-            } else if (expression instanceof PixelLiteral) {
-                return ExpressionType.PIXEL;
             } else if (expression instanceof ColorLiteral) {
                 return ExpressionType.COLOR;
             } else if (expression instanceof ScalarLiteral) {
                 return ExpressionType.SCALAR;
+            } else if (expression instanceof PixelLiteral) {
+                return ExpressionType.PIXEL;
             } else if (expression instanceof BoolLiteral) {
                 return ExpressionType.BOOL;
             }

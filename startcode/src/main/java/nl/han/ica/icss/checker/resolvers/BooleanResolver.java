@@ -12,12 +12,12 @@ public class BooleanResolver {
         this.checkExpression = checkExpression;
     }
 
-    public ExpressionType resolveBoolean(BooleanClause ifClause) {
-        Expression conditionalExpression = ifClause.conditionalExpression;
+    public ExpressionType resolveBoolean(BooleanClause booleanClause) {
+        Expression conditionalExpression = booleanClause.booleanExpression;
         ExpressionType expressionType = this.checkExpression.getExpressionTypeForExpression(conditionalExpression);
 
         if (expressionType != ExpressionType.BOOL) {
-            ifClause.setError("ConditionalExpression should be a boolean literal.");
+            booleanClause.setError(String.format("Expression type should be boolean, but was: '%s'.", expressionType));
             return ExpressionType.UNDEFINED;
         }
 

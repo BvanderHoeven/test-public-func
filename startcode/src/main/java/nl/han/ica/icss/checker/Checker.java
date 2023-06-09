@@ -52,18 +52,14 @@ public class Checker {
 
             if (child instanceof Stylerule) {
                 variableTypes.addFirst(new HashMap<>());
-                this.resolveStylerule(child);
+                Stylerule stylerule = (Stylerule) astNode;
+        this.resolveRuleBody(stylerule.body);
                 variableTypes.removeFirst();
             }
 
         }
 
         variableTypes.removeFirst();
-    }
-
-    private void resolveStylerule(ASTNode astNode) {
-        Stylerule stylerule = (Stylerule) astNode;
-        this.resolveRuleBody(stylerule.body);
     }
 
     private void resolveRuleBody(ArrayList<ASTNode> astNodes) {
@@ -74,7 +70,18 @@ public class Checker {
             }
 
             if (astNode instanceof BooleanClause) {
-                this.resolveIfClause(astNode);
+                BooleanClause ifClause = (BooleanClause) astNode;
+                variableTypes.addFirst(new HashMap<>());
+                this.booleanResolver.resolveBoolean(ifClause);
+                this.resolveRuleBody(ifClause.body);
+                this.variableTypes.removeFirst();
+        
+                if (ifClause.elseClause != null) {
+                    this.variableTypes.addFirst(new HashMap<>());
+                    ElseClause elseClause = (ElseClause) astNode;
+                    this.resolveRuleBody(elseClause.body);
+                    this.variableTypes.removeFirst();
+                }
                 continue;
             }
 
@@ -88,6 +95,10 @@ public class Checker {
         Declaration declaration = (Declaration) astNode;
         ExpressionType expressionType = this.expressionResolver.getExpressionTypeForASTNode(declaration.expression);
 
+        ValidateDeclaration(astNode, declaration, expressionType);
+    }
+
+    private void ValidateDeclaration(ASTNode astNode, Declaration declaration, ExpressionType expressionType) {
         String declarationName = declaration.property.name;
         switch (declarationName) {
             case "color":
@@ -115,23 +126,4 @@ public class Checker {
                 break;
         }
     }
-
-    private void resolveIfClause(ASTNode astNode) {
-        BooleanClause ifClause = (BooleanClause) astNode;
-        variableTypes.addFirst(new HashMap<>());
-        this.booleanResolver.resolveBoolean(ifClause);
-        this.resolveRuleBody(ifClause.body);
-        this.variableTypes.removeFirst();
-
-        if (ifClause.elseClause != null) {
-            this.variableTypes.addFirst(new HashMap<>());
-            this.resolveElse(ifClause.elseClause);
-            this.variableTypes.removeFirst();
-        }
-    }
-
-    private void resolveElse(ASTNode astNode) {
-        ElseClause elseClause = (ElseClause) astNode;
-        this.resolveRuleBody(elseClause.body);
-    }    
 }

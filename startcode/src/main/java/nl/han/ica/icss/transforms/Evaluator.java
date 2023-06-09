@@ -85,9 +85,9 @@ public class Evaluator implements Transform {
 
         if (astNode instanceof BooleanClause) {
             BooleanClause ifClause = (BooleanClause) astNode;
-            ifClause.conditionalExpression = this.transformExpression(ifClause.conditionalExpression);
+            ifClause.booleanExpression = this.transformExpression(ifClause.booleanExpression);
 
-            if (((BoolLiteral) ifClause.conditionalExpression).value) {
+            if (((BoolLiteral) ifClause.booleanExpression).value) {
                 if (ifClause.elseClause != null) {
                     ifClause.elseClause.body = new ArrayList<>();
                 }

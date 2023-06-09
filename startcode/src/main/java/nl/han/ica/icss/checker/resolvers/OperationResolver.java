@@ -15,12 +15,13 @@ public class OperationResolver {
         this.expressionResolver = checkExpression;
     }
 
+    // Returns the expression type for the given operation.
     public ExpressionType getExpressionTypeForOperation(Operation operation) {
         ExpressionType left = getExpressionType(operation.lhs);
         ExpressionType right = getExpressionType(operation.rhs);
 
         if (left == ExpressionType.COLOR || right == ExpressionType.COLOR || left == ExpressionType.BOOL || right == ExpressionType.BOOL) {
-            operation.setError("Colors and booleans are not allowed in operations.");
+            operation.setError(String.format("Type '%s' not allowed in operation", left));
             return ExpressionType.UNDEFINED;
         }
 
@@ -30,8 +31,9 @@ public class OperationResolver {
                 return ExpressionType.UNDEFINED;
             }
             return right != ExpressionType.SCALAR ? right : left;
-        } else if ((operation instanceof SubtractOperation || operation instanceof AddOperation) && left != right) {
-            operation.setError("You can only do add and subtract operations with the same literal.");
+        } 
+        else if ((operation instanceof SubtractOperation || operation instanceof AddOperation) && left != right) {
+            operation.setError(String.format("Left: '%s' and Right: '%s' need to be the same type for this operation: '%s'.", left, right, operation.getNodeLabel()));
             return ExpressionType.UNDEFINED;
         }
 

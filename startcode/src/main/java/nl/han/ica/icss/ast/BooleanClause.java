@@ -6,7 +6,7 @@ import java.util.Objects;
 public class BooleanClause extends ASTNode {
 
 
-    public Expression conditionalExpression;
+    public Expression booleanExpression;
     public ArrayList<ASTNode> body = new ArrayList<>();
     public ElseClause elseClause;
 
@@ -14,12 +14,12 @@ public class BooleanClause extends ASTNode {
 
     public BooleanClause(Expression conditionalExpression, ArrayList<ASTNode> body) {
 
-        this.conditionalExpression = conditionalExpression;
+        this.booleanExpression = conditionalExpression;
         this.body = body;
     }
     public BooleanClause(Expression conditionalExpression, ArrayList<ASTNode> body, ElseClause elseClause) {
 
-        this.conditionalExpression = conditionalExpression;
+        this.booleanExpression = conditionalExpression;
         this.body = body;
         this.elseClause = elseClause;
     }
@@ -31,7 +31,7 @@ public class BooleanClause extends ASTNode {
     @Override
     public ArrayList<ASTNode> getChildren() {
         ArrayList<ASTNode> children = new ArrayList<>();
-        children.add(conditionalExpression);
+        children.add(booleanExpression);
         children.addAll(body);
         if (elseClause!=null)
             children.add(elseClause);
@@ -42,7 +42,7 @@ public class BooleanClause extends ASTNode {
     @Override
     public ASTNode addChild(ASTNode child) {
         if(child instanceof Expression)
-            conditionalExpression  = (Expression) child;
+            booleanExpression  = (Expression) child;
         else if (child instanceof ElseClause)
             elseClause = (ElseClause) child;
         else
@@ -57,10 +57,10 @@ public class BooleanClause extends ASTNode {
         if (!super.equals(o)) return false;
         BooleanClause ifClause = (BooleanClause) o;
         if (this.elseClause == null)
-            return Objects.equals(conditionalExpression, ifClause.getConditionalExpression()) &&
+            return Objects.equals(booleanExpression, ifClause.getBooleanExpression()) &&
                 Objects.equals(body, ifClause.body);
         else
-            return Objects.equals(conditionalExpression, ifClause.getConditionalExpression()) &&
+            return Objects.equals(booleanExpression, ifClause.getBooleanExpression()) &&
                     Objects.equals(body, ifClause.body) &&
                     Objects.equals(elseClause, ifClause.elseClause);
 
@@ -68,11 +68,11 @@ public class BooleanClause extends ASTNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(conditionalExpression, body, elseClause);
+        return Objects.hash(booleanExpression, body, elseClause);
     }
 
-    public Expression getConditionalExpression() {
-        return conditionalExpression;
+    public Expression getBooleanExpression() {
+        return booleanExpression;
     }
     public ElseClause getElseClause() { return elseClause; }
 }

@@ -24,13 +24,13 @@ public class VariableResolver {
         ExpressionType expressionType = expressionResolver.getExpressionTypeForASTNode(variableAssignment.expression);
 
         if (expressionType == null || expressionType == ExpressionType.UNDEFINED) {
-            astNode.setError(String.format("Variable assignment %s is invalid because of a faulty expression.", variableReference.name));
+            astNode.setError(String.format("Variable assignment %s is invalid.", variableReference.name));
             return;
         }
 
         ExpressionType previousExpressionType = getExpressionTypeByName(variableReference.name);
         if (previousExpressionType != null && expressionType != previousExpressionType) {
-            astNode.setError(String.format("Can't change from %s to %s", previousExpressionType.toString(), expressionType.toString()));
+            astNode.setError(String.format("Can't change from '%s' to '%s'", previousExpressionType.toString(), expressionType.toString()));
         }
 
         expressionTypes.getFirst().put(variableReference.name, expressionType);
@@ -39,7 +39,7 @@ public class VariableResolver {
     public ExpressionType getExpressionTypeForVariableReference(VariableReference variableReference) {
         ExpressionType expressionType = getExpressionTypeByName(variableReference.name);
         if (expressionType == null) {
-            variableReference.setError(String.format("Variable %s not declared or in scope.", variableReference.name));
+            variableReference.setError(String.format("Variable: '%s' not declared or in scope.", variableReference.name));
             return null;
         }
         return expressionType;
